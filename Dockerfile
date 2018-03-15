@@ -1,14 +1,16 @@
 FROM golang:1.8 as goimage
-ENV SRC=/go/src/
 RUN mkdir -p /go/src/
-WORKDIR /go/src/go_docker
-RUN git clone -b master --single-branch "https://github.com/Edge363/POC.Product.git" /go/src/go_docker/ \
-&& CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-go build -o bin/go_docker
-FROM alpine:3.6 as baseimagealp
-RUN apk add — no-cache bash
-ENV WORK_DIR=/docker/bin
-WORKDIR $WORK_DIR
-COPY --from=goimage /go/src/go_docker/bin/ ./
-ENTRYPOINT /docker/bin/go_docker
-EXPOSE 8080
+RUN git clone -b master --single-branch https://github.com/Edge363/pocproduct.git /go/src/ 
+RUN CGO_ENABLED=0 
+RUN GOOS=linux 
+RUN GOARCH=amd64 
+WORKDIR /go/src/pocproduct
+COPY . .
+RUN go get
+RUN go install
+CMD ["pocproduct"]
+
+# to build later 
+# docker build -t pocproduct .
+# to run later
+# docker run -p 8080:8080 -it --rm --name pocproduct pocproduct
