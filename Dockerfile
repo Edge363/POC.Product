@@ -1,4 +1,4 @@
-FROM golang:1.8 as goimage
+FROM golang:alpine as goimage
 RUN mkdir -p /go/src/
 RUN git clone -b master --single-branch https://github.com/Edge363/pocproduct.git /go/src/ 
 RUN CGO_ENABLED=0 
