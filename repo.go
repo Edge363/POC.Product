@@ -26,9 +26,8 @@ func init() {
 
 	sess, err := session.NewSession(
 		&aws.Config{
-			Region:      aws.String("us-east-1"),
-			Credentials: creds,
-			Endpoint:    aws.String("localhost:8000"),
+			Region:   aws.String("us-east-1"),
+			Endpoint: aws.String("http://localhost:8000"),
 		},
 	)
 	if err != nil {
@@ -36,9 +35,9 @@ func init() {
 		os.Exit(1)
 	}
 
-	// Create connection to remote dynamodb
 	Localsvc = dynamodb.New(sess)
 
+	// Create connection to remote dynamodb
 	creds = credentials.NewEnvCredentials()
 
 	sess, err = session.NewSession(&aws.Config{
