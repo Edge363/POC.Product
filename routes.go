@@ -15,68 +15,69 @@ type Route struct {
 //Routes is a supporter type for making the neato default routes object
 type Routes []Route
 
+//AppRoutes is thhe container for route definitions used by the application
 var routes = Routes{
 	//Local Routes
 	Route{
-		"Index",
+		"localQuery",
 		"GET",
 		"/local/product",
-		localProductQueryHandler,
+		LocalProductQueryHandler,
 	},
 	Route{
-		"Index",
+		"localGet",
 		"GET",
 		"/local/product/{productid}",
-		localProductGetHandler,
+		LocalProductGetHandler,
 	},
 	Route{
-		"TodoIndex",
+		"localPut",
 		"PUT",
-		"/local/product/{productid}",
-		localProductPutHandler,
+		"/local/product",
+		LocalProductPutHandler,
 	},
 	Route{
-		"TodoShow",
+		"localPut",
 		"POST",
-		"local/product/{productid}",
-		localProductPostHandler,
+		"/local/product/{productid}",
+		LocalProductPostHandler,
 	},
 	Route{
-		"TodoShow",
+		"localDelete",
 		"DELETE",
-		"local/product/{productid}",
-		localProductDeleteHandler,
+		"/local/product/{productid}",
+		LocalProductDeleteHandler,
 	},
 
 	//AWS Routes
 	Route{
-		"Index",
+		"awsQuery",
 		"GET",
 		"/aws/product",
-		awsProductQueryHandler,
+		AwsProductQueryHandler,
 	},
 	Route{
-		"Index",
+		"awsGet",
 		"GET",
 		"/aws/product/{productid}",
-		awsProductGetHandler,
+		AwsProductGetHandler,
 	},
 	Route{
-		"TodoIndex",
+		"awsPut",
 		"PUT",
-		"/aws/product/{productid}",
-		awsProductPutHandler,
+		"/aws/product",
+		AwsProductPutHandler,
 	},
 	Route{
-		"TodoShow",
+		"awsPost",
 		"POST",
-		"aws/product/{productid}",
-		awsProductPostHandler,
+		"/aws/product/{productid}",
+		AwsProductPostHandler,
 	},
 	Route{
-		"TodoShow",
+		"awsDelete",
 		"DELETE",
-		"aws/product/{productid}",
-		awsProductDeleteHandler,
+		"/aws/product/{productid}",
+		AwsProductDeleteHandler,
 	},
 }
