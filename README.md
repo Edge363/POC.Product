@@ -4,9 +4,15 @@ A minimum viable product demonstrating Golang, dynamodb, Docker, and various fra
 
 # Running a local version
 
-1. Build the executable on your machine and run it: 
+1. Build the executable on your machine and run it (or pull down from Docker): 
   1. go build (inside the pocproduct directory) 
-  2. ./pocproduct.exe (inside the pocproduct directory) 
+  2. Create two environmental variables. One for AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY. Link them to an IAM user.
+  3. ./pocproduct.exe (inside the pocproduct directory) 
+  
+1.2 . 
+  1. Pull down image: docker pull whewitt363/pocproduct in the command line
+
+  2. Run image: docker run -e AWS_ACCESS_KEY_ID='actual thing' -e AWS_SECRET_ACCESS_KEY='actual thing' -p 8080:8080 -it --rm --name pocproduct pocproduct
 
 2. Pull down DynamoDB local version using Docker: docker pull dwmkerr/dynamodb
 
@@ -34,7 +40,6 @@ If you use Postman, here is a collections https://www.getpostman.com/collections
 
 If not, here are some routes
 
-# Local
 localhost:8080/local/product/1 POST
   Body: {"price":0.75,"name":"kiwi"}
 localhost:8080/local/product/1 GET
@@ -42,7 +47,7 @@ localhost:8080/local/product PUT
   Body: {"Id":"1","price":1000,"name":"banana"}
 localhost:8080/local/product/1 DELETE
 
-# Remote
+Remote
 localhost:8080/aws/product/1 POST
   Body: {"price":0.75,"name":"kiwi"}
 localhost:8080/aws/product/1 GET
