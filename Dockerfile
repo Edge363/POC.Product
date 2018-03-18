@@ -13,4 +13,4 @@ CMD ["pocproduct"]
 # to build later 
 # docker build -t pocproduct .
 # to run later
-# docker run -p 8080:8080 -it --rm --name pocproduct pocproduct
+# docker run -e AWS_ACCESS_KEY_ID='actual thing' -e AWS_SECRET_ACCESS_KEY='actual thing' -p 8080:8080 -it --rm --name pocproduct pocproduct 

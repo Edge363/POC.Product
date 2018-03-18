@@ -17,7 +17,8 @@ func localProductQueryHandler(w http.ResponseWriter, r *http.Request) {
 
 	proj := expression.NamesList(expression.Name("Price"), expression.Name("Id"), expression.Name("Name"))
 
-	//My attempt at using the query map for finding exact values, it is rough
+	//My attempt at using the query map for finding exact values, it is rough, but the recommended solutions on
+
 	if len(r.URL.Query()) > 0 {
 		filters := make([]expression.ConditionBuilder, len(r.URL.Query()))
 		counter := 0
