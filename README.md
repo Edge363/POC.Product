@@ -24,6 +24,8 @@ If you use Postman, here is a collections https://www.getpostman.com/collections
 
 3. Run image: docker run -e AWS_ACCESS_KEY_ID='actual thing' -e AWS_SECRET_ACCESS_KEY='actual thing' -p 8080:8080 -it --rm --name pocproduct pocproduct
 
+4. Create a "Products" table in your dynamodb application with a Primary key called "Id", that's all.
+
 # Using Endpoint
 
 Look at the Routes.go file if you want an overview of them, otherwise: 
@@ -49,3 +51,21 @@ localhost:8080/aws/product PUT
 localhost:8080/aws/product/1 DELETE
 
 # Live Version: Coming sooooon!
+
+# Assumptions
+
+1. The ask was for a minimalist project. Use go, dynamo(both local and otherwise) not overkill.
+
+# Future Work
+
+1. Integration Testing, If I had more time, then testing would have been a much larger concern. Integration testing to make sure the dynamodb connection is available, that components in the app are working together, etc. 
+
+2. Unit Testing, If I had more time then unit testing the logic throughout the application would be a must, lots of it would be difficult to update and change later.
+
+3. Refactoring. The handlers are nowhere near pretty. Lots of code reuse, some loops are poorly written, or even missing. 
+
+4. Experiment with DynamoDB libraries. I stuck to the standard AWS libraries for comunicating with Dynamo, but Underarmour's project dynago looks cool, and in general, different libraries for it.
+
+5. A different HTTP library. Mux Gorilla seemed like an easy solution, but it really doesn't do much more than the basic HTTP handling libraries built into go.
+
+6. Expand the querying mechanics. I did not do very well with this part of the assignment, it really should have had more fields and been more expansive. I primarily focused on finishing as opposed to flushing out the capabilities.
