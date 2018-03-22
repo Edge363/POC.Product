@@ -1,4 +1,7 @@
 pipeline { 
+    environment {
+     devqa = "devqa"
+   }
     agent any 
     stages {
           stage('Checkout scm'){
@@ -16,7 +19,7 @@ pipeline {
 
             sh 'go build'
         }
-        
+
         // stage('Unit'){
 
         //     sh 'go test -tags=unit'
