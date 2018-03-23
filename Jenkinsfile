@@ -1,6 +1,4 @@
 node {   
-    def root = tool name: 'Go 1.8', type: 'go'
- 
     withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin", "GOPATH=/go-projects"]) {
         sh 'go version'
     }
