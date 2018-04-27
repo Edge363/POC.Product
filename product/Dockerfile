@@ -8,6 +8,7 @@ WORKDIR /go/src/pocproduct/product
 COPY . . 
 RUN go get
 RUN go install
+RUN go build
 CMD ["product"]
 
 # to build later 

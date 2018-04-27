@@ -1,6 +1,7 @@
 version: '3'
 services:
   product:
+    build: ~/go/src/pocproduct/product
     image: product
     ports:
      - "8080:8080"
