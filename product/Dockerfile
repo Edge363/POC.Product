@@ -8,7 +8,7 @@ WORKDIR /go/src/pocproduct/product
 COPY . . 
 RUN go get
 RUN go install
-CMD ["pocproduct"]
+CMD ["product"]
 
 # to build later 
 # docker build -t pocproduct .
