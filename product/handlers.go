@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 
@@ -13,9 +12,6 @@ import (
 func getHandler(w http.ResponseWriter, r *http.Request) {
 	productid := mux.Vars(r)["productid"]
 	svc := Localsvc
-	if strings.Contains(r.URL.String(), "aws") {
-		svc = Awssvc
-	}
 
 	product, err := getProduct(&productid, svc)
 	if err != nil {
@@ -38,9 +34,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 
 func putHandler(w http.ResponseWriter, r *http.Request) {
 	svc := Localsvc
-	if strings.Contains(r.URL.String(), "aws") {
-		svc = Awssvc
-	}
+
 	decoder := json.NewDecoder(r.Body)
 	product := new(Product)
 	err := decoder.Decode(&product)
@@ -61,9 +55,6 @@ func putHandler(w http.ResponseWriter, r *http.Request) {
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	productid := mux.Vars(r)["productid"]
 	svc := Localsvc
-	if strings.Contains(r.URL.String(), "aws") {
-		svc = Awssvc
-	}
 	decoder := json.NewDecoder(r.Body)
 	product := new(Product)
 	err := decoder.Decode(&product)
@@ -84,9 +75,6 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	productid := mux.Vars(r)["productid"]
 	svc := Localsvc
-	if strings.Contains(r.URL.String(), "aws") {
-		svc = Awssvc
-	}
 	err := deleteProduct(&productid, svc)
 	if err != nil {
 		fmt.Fprintln(w, err.Error())

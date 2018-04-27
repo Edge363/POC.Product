@@ -54,36 +54,4 @@ var routes = Routes{
 		"/local/product/{productid}",
 		deleteHandler,
 	},
-
-	//AWS Routes
-	Route{
-		"awsQuery",
-		"GET",
-		"/aws/product",
-		productQueryHandler,
-	},
-	Route{
-		"awsGet",
-		"GET",
-		"/aws/product/{productid}",
-		getHandler,
-	},
-	Route{
-		"awsPut",
-		"PUT",
-		"/aws/product",
-		putHandler,
-	},
-	Route{
-		"awsPost",
-		"POST",
-		"/aws/product/{productid}",
-		postHandler,
-	},
-	Route{
-		"awsDelete",
-		"DELETE",
-		"/aws/product/{productid}",
-		deleteHandler,
-	},
 }

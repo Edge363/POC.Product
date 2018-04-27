@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -22,7 +21,6 @@ var Awssvc *dynamodb.DynamoDB
 func init() {
 
 	//create connection to local dynamodb
-	creds := credentials.NewStaticCredentials("1", "1", "")
 
 	sess, err := session.NewSession(
 		&aws.Config{
@@ -37,20 +35,29 @@ func init() {
 
 	Localsvc = dynamodb.New(sess)
 
-	// Create connection to remote dynamodb
-	creds = credentials.NewEnvCredentials()
-
-	sess, err = session.NewSession(&aws.Config{
-		Region:      aws.String("us-east-1"),
-		Credentials: creds,
-	})
+	result, err := Localsvc.ListTables(&dynamodb.ListTablesInput{})
 
 	if err != nil {
-		fmt.Println("Error Creating Session with AWS")
+		fmt.Println(err)
 		os.Exit(1)
 	}
+	createTable("Products", result)
 
-	Awssvc = dynamodb.New(sess)
+	// Create connection to remote dynamodb
+	//EXAMPLE
+	// creds = credentials.NewEnvCredentials()
+
+	// sess, err = session.NewSession(&aws.Config{
+	// 	Region:      aws.String("us-east-1"),
+	// 	Credentials: creds,
+	// })
+
+	// if err != nil {
+	// 	fmt.Println("Error Creating Session with AWS")
+	// 	os.Exit(1)
+	// }
+
+	// Awssvc = dynamodb.New(sess)
 
 }
 
@@ -133,4 +140,46 @@ func postProduct(id *string, product *Product, svc *dynamodb.DynamoDB) error {
 	product.Id = *id
 	putProduct(product, svc)
 	return nil
+}
+
+func hasTable(s []*string, e string) bool {
+	for _, a := range s {
+		if *a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func createTable(name string, result *dynamodb.ListTablesOutput) {
+	if !hasTable(result.TableNames, name) {
+		input := &dynamodb.CreateTableInput{
+			AttributeDefinitions: []*dynamodb.AttributeDefinition{
+				{
+					AttributeName: aws.String("Id"),
+					AttributeType: aws.String("S"),
+				},
+			},
+			KeySchema: []*dynamodb.KeySchemaElement{
+				{
+					AttributeName: aws.String("Id"),
+					KeyType:       aws.String("HASH"),
+				},
+			},
+			ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+				ReadCapacityUnits:  aws.Int64(10),
+				WriteCapacityUnits: aws.Int64(10),
+			},
+			TableName: aws.String(name),
+		}
+		_, err := Localsvc.CreateTable(input)
+
+		if err != nil {
+			fmt.Println("Got error calling CreateTable:")
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Println("Created the table Products")
+	}
 }

@@ -4,8 +4,8 @@ RUN git clone -b master --single-branch https://github.com/Edge363/pocproduct.gi
 RUN CGO_ENABLED=0 
 RUN GOOS=linux 
 RUN GOARCH=amd64 
-WORKDIR /go/src/pocproduct
-COPY . .
+WORKDIR /go/src/pocproduct/product
+COPY . . 
 RUN go get
 RUN go install
 CMD ["pocproduct"]
