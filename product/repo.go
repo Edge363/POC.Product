@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -22,10 +23,12 @@ func init() {
 
 	//create connection to local dynamodb
 
+	creds := credentials.NewStaticCredentials("1", "1", "")
 	sess, err := session.NewSession(
 		&aws.Config{
 			Region:   aws.String("us-east-1"),
 			Endpoint: aws.String("http://localhost:8000"),
+			Credentials: creds,
 		},
 	)
 	if err != nil {
