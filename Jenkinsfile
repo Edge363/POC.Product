@@ -5,7 +5,7 @@ node('dev') {
         checkout scm
     }       
     stage('Build'){
-        dir('pocproduct'){
+        dir('product'){
             sh 'go build'
         }
     }
