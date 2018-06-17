@@ -3,7 +3,7 @@ node('dev') {
     sh 'echo $GOPATH'
     stage('Checkout') {
         dir('$GOPATH/src/'){
-            git url: 'https://github.com/edge363/pocproduct.git'
+            def scmVars = checkout scm
         }
     }       
     stage('Build'){
