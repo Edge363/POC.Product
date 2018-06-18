@@ -1,5 +1,6 @@
 # iron/go is the alpine image with only ca-certificates added
 FROM golang:1.8 as goimage
+LABEL image=golangBuilder
 RUN mkdir -p /go/src/
 RUN git clone -b master --single-branch https://github.com/Edge363/pocproduct.git /go/src/ 
 RUN CGO_ENABLED=0 
@@ -11,7 +12,14 @@ RUN go get
 RUN go install
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o product .
 
-FROM alpine:latest  
+FROM golangBuilder AS golangTester
+LABEL image=${build}
+WORKDIR /go/src/pocproduct/product
+RUN go test
+
+
+FROM alpine:latest 
+LABEL image=release
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=0 /go/src/pocproduct/product .
