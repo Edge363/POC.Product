@@ -1,7 +1,19 @@
-FROM golang:latest as goimage
-CMD ["product"]
+# iron/go is the alpine image with only ca-certificates added
+FROM golang:1.8 as goimage
+RUN mkdir -p /go/src/
+RUN git clone -b master --single-branch https://github.com/Edge363/pocproduct.git /go/src/ 
+RUN CGO_ENABLED=0 
+RUN GOOS=linux 
+RUN GOARCH=amd64    
+WORKDIR /go/src/pocproduct/product
+COPY . . 
+RUN go get
+RUN go install
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o product .
 
-# to build later 
-# docker build -t pocproduct .
-# to run later  
+FROM alpine:latest  
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=0 /go/src/pocproduct/product .
+CMD ["./product"]  
 # docker run -p 8080:8080 -it --rm --name product product 

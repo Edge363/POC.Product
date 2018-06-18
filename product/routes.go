@@ -19,39 +19,45 @@ type Routes []Route
 var routes = Routes{
 	//Local Routes
 	Route{
-		"localQuery",
+		"helloWorld",
 		"GET",
-		"/local/product",
-		productQueryHandler,
+		"/hello",
+		helloHandler,
 	},
-	Route{
-		"localGet",
-		"GET",
-		"/local/product/{productid}",
-		getHandler,
-	},
-	Route{
-		"localPut",
-		"PUT",
-		"/local/product",
-		putHandler,
-	},
-	Route{
-		"localPut",
-		"POST",
-		"/local/product/{productid}",
-		postHandler,
-	},
-	Route{
-		"Create Dynamo Table",
-		"POST",
-		"/local",
-		postHandler,
-	},
-	Route{
-		"localDelete",
-		"DELETE",
-		"/local/product/{productid}",
-		deleteHandler,
-	},
+	// Route{
+	// 	"localQuery",
+	// 	"GET",
+	// 	"/local/product",
+	// 	productQueryHandler,
+	// },
+	// Route{
+	// 	"localGet",
+	// 	"GET",
+	// 	"/local/product/{productid}",
+	// 	getHandler,
+	// },
+	// Route{
+	// 	"localPut",
+	// 	"PUT",
+	// 	"/local/product",
+	// 	putHandler,
+	// },
+	// Route{
+	// 	"localPut",
+	// 	"POST",
+	// 	"/local/product/{productid}",
+	// 	postHandler,
+	// },
+	// Route{
+	// 	"Create Dynamo Table",
+	// 	"POST",
+	// 	"/local",
+	// 	postHandler,
+	// },
+	// Route{
+	// 	"localDelete",
+	// 	"DELETE",
+	// 	"/local/product/{productid}",
+	// 	deleteHandler,
+	// },
 }
