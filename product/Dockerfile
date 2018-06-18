@@ -12,11 +12,6 @@ RUN go get
 RUN go install
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o product .
 
-FROM golangBuilder AS golangTester
-LABEL image=${build}
-WORKDIR /go/src/pocproduct/product
-RUN go test
-
 FROM alpine:latest 
 LABEL image=release
 RUN apk --no-cache add ca-certificates
