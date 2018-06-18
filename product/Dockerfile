@@ -17,7 +17,6 @@ LABEL image=${build}
 WORKDIR /go/src/pocproduct/product
 RUN go test
 
-
 FROM alpine:latest 
 LABEL image=release
 RUN apk --no-cache add ca-certificates
