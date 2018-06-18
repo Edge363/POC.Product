@@ -1,4 +1,5 @@
 node('dev') {   
+
     sh 'echo $GOPATH'
     stage('Checkout') {
         checkout scm
@@ -16,7 +17,6 @@ node('dev') {
     stage('Docker build image'){
         dir('product'){
             sh "docker build --rm=false --build-arg=\"build=${env.BUILD_NUMBER}\" -t pocproduct ."
-            sh "docker cp \$(docker ps -a -f \"label=image=test\" -f \"label=build=${env.BUILD_NUMBER}\" -f \"status=exited\" --format \"{{.ID}}\"):/app/build . "
         }
     }
     stage("Upload Docker Image"){
