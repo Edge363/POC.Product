@@ -20,6 +20,8 @@ node('dev') {
         }
     }
     stage("Upload Docker Image"){
-        echo "TODO"
+        docker.withRegistry("https://288372509437.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:Jenkins_Slave_IAM") {
+            docker.image("pocproduct").push("latest")
+        }
     }
 }
