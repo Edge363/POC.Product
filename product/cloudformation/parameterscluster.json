@@ -1,0 +1,34 @@
+[
+    {
+        "ParameterKey": "KeyName",
+        "ParameterValue": "test"
+    },
+    {
+      "ParameterKey": "ApplicationName",
+      "ParameterValue": "randonlink"
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-b3e66ac8"
+    },
+    {
+      "ParameterKey": "SubnetId",
+      "ParameterValue": "subnet-18409e7f"
+    },
+    {
+        "ParameterKey": "SubnetId",
+        "ParameterValue": "subnet-35476a0a"
+    },
+    {
+        "ParameterKey": "DesiredCapacity",
+        "ParameterValue": "1"
+    },
+    {
+      "ParameterKey": "MaxSize",
+      "ParameterValue": "2"
+    },
+    {
+      "ParameterKey": "InstanceType",
+      "ParameterValue": "t2.micro"
+    }
+]
