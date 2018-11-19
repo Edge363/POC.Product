@@ -383,7 +383,7 @@ Resources:
       DBInstanceClass: "db.t2.micro"
       Engine: "MySQL"
       MasterUsername: admin
-      MasterUserPassword: pass
+      MasterUserPassword: password
       PubliclyAccessible: false
       VPCSecurityGroups: [!Ref randonlinkbackendSG]
       DBInstanceIdentifier: randonlink
