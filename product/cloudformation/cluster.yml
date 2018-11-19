@@ -387,7 +387,7 @@ Resources:
       PubliclyAccessible: false
       VPCSecurityGroups: [!Ref randonlinkbackendSG]
       DBInstanceIdentifier: randonlink
-      DBSubnetGroupName: !Ref dbsubnetgroup
+      DBSubnetGroupName: dbsubnetgroup
   privatesubnetdbone:
     Type: AWS::EC2::Subnet
     Properties:
@@ -404,6 +404,7 @@ Resources:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties: 
       DBSubnetGroupDescription: "randonlink"
+      DBSubnetGroupName: dbsubnetgroup
       SubnetIds: 
         - !Ref privatesubnetdbone
         - !Ref privatesubnetdbtwo
