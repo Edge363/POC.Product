@@ -77,6 +77,7 @@ Resources:
     Properties:
       DestinationSecurityGroupId: !Ref randonlinkfrontendSG
       GroupId: !Ref randonlinkbackendSG
+      IpProtocol: -1
   randonlinkfrontendSGALBports:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
@@ -385,7 +386,7 @@ Resources:
       MasterUsername: admin
       MasterUserPassword: pass
       PubliclyAccessible: false
-      VPCSecurityGroups: !Ref randonlinkbackendSG
+      VPCSecurityGroups: [!Ref randonlinkbackendSG]
       DBInstanceIdentifier: randonlink
 Outputs:
   ecsservice:
