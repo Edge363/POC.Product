@@ -388,7 +388,13 @@ Resources:
       PubliclyAccessible: false
       VPCSecurityGroups: [!Ref randonlinkbackendSG]
       DBInstanceIdentifier: randonlink
-      DBSubnetGroupName: [!Ref SubnetId][0]
+      DBSubnetGroupName: !Ref privatesubnetdb
+  privatesubnetdb:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: "us-east-1a"
 Outputs:
   ecsservice:
     Value: !Ref service
