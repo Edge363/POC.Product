@@ -154,7 +154,7 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
-      Subnets: !Ref SubnetId
+      Subnets: [!Ref SubnetId]
       SecurityGroups:
         - !Ref randonlinkfrontendSG
   ALBListener:
