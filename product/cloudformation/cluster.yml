@@ -372,6 +372,20 @@ Resources:
       Path: /
       Roles:
         - !Ref EC2Role
+  randonlinkdb: 
+    Type: AWS::RDS::DBInstance
+    Properties: 
+      AllocatedStorage: "20"
+      DBInstanceClass: "db.t2.micro"
+      Engine: "MySQL"
+      EngineVersion: "5.6.13"
+      MasterUsername: admin
+      MasterUserPassword: pass
+      PubliclyAccessible: false
+      VPCSecurityGroups: !Ref randonlinkbackendSG
+      DBInstanceIdentifier: randonlink
+      MultiAZ": true
+
 Outputs:
   ecsservice:
     Value: !Ref service
@@ -386,18 +400,3 @@ Outputs:
           - DNSName
   taskdef:
     Value: !Ref taskdefinition
-randonlinkdb: 
-  Type: AWS::RDS::DBInstance
-  Properties: 
-    AllocatedStorage: "20"
-    DBInstanceClass: "db.t2.micro"
-    Engine: "MySQL"
-    EngineVersion: "5.6.13"
-    MasterUsername: 
-      Ref: "DBUser"
-    MasterUserPassword: 
-      Ref: "DBPassword"
-    PubliclyAccessible: false
-    VPCSecurityGroups: !Ref randonlinkbackendSG
-    DBInstanceIdentifier: randonlink
-    MultiAZ": true
