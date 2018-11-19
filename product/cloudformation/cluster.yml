@@ -69,11 +69,13 @@ Resources:
   backendinbound:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
-      GroupId: !Ref randonlinkfrontendSG
+      GroupId: !Ref randonlinkbackendSG
+      SourceSecurityGroupName: !Ref randonlinkfrontendendSG
   backendoutbound:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
       DestinationSecurityGroupId: !Ref randonlinkfrontendSG
+      GroupId: !Ref randonlinkbackendSG
   randonlinkfrontendSGALBports:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
