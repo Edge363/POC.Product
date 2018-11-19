@@ -388,7 +388,7 @@ Resources:
       PubliclyAccessible: false
       VPCSecurityGroups: [!Ref randonlinkbackendSG]
       DBInstanceIdentifier: randonlink
-      DBSubnetGroupName: !Ref SubnetId
+      DBSubnetGroupName: [!Ref SubnetId][0]
 Outputs:
   ecsservice:
     Value: !Ref service
