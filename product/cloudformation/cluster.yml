@@ -71,6 +71,7 @@ Resources:
     Properties:
       GroupId: !Ref randonlinkbackendSG
       SourceSecurityGroupName: !Ref randonlinkfrontendSG
+      IpProtocol: -1
   backendoutbound:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
@@ -386,8 +387,6 @@ Resources:
       PubliclyAccessible: false
       VPCSecurityGroups: !Ref randonlinkbackendSG
       DBInstanceIdentifier: randonlink
-      MultiAZ": true
-
 Outputs:
   ecsservice:
     Value: !Ref service
