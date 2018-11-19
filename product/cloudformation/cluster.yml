@@ -38,35 +38,50 @@ Mappings:
 Resources:
   ECSCluster:
     Type: 'AWS::ECS::Cluster'
-  EcsSecurityGroup:
+  randonlinkfrontendSG:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: ECS Security Group
+      GroupDescription: Front end security group
+      GroupName: randonlinkfrontend
       VpcId: !Ref VpcId
-  EcsSecurityGroupHTTPinbound:
+  randonlinkfrontendSGHTTPinbound:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
-      GroupId: !Ref EcsSecurityGroup
+      GroupId: !Ref randonlinkfrontendSG
       IpProtocol: tcp
       FromPort: '80'
       ToPort: '80'
       CidrIp: 0.0.0.0/0
-  EcsSecurityGroupSSHinbound:
+  randonlinkfrontendSGSSHinbound:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
-      GroupId: !Ref EcsSecurityGroup
+      GroupId: !Ref randonlinkfrontendSG
       IpProtocol: tcp
       FromPort: '22'
       ToPort: '22'
       CidrIp: 0.0.0.0/0
-  EcsSecurityGroupALBports:
+  randonlinkbackendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: randonlinkbackend
+      GroupDescription: Backend security group
+      VpcId: !Ref VpcId
+  backendinbound:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
-      GroupId: !Ref EcsSecurityGroup
+      GroupId: !Ref randonlinkfrontendSG
+  backendoutbound:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      DestinationSecurityGroupId: !Ref randonlinkfrontendSG
+  randonlinkfrontendSGALBports:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkfrontendSG
       IpProtocol: tcp
       FromPort: '31000'
       ToPort: '61000'
-      SourceSecurityGroupId: !Ref EcsSecurityGroup
+      SourceSecurityGroupId: !Ref randonlinkfrontendSG
   CloudwatchLogsGroup:
     Type: 'AWS::Logs::LogGroup'
     Properties:
@@ -137,7 +152,7 @@ Resources:
           Value: '30'
       Subnets: !Ref SubnetId
       SecurityGroups:
-        - !Ref EcsSecurityGroup
+        - !Ref randonlinkfrontendSG
   ALBListener:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     DependsOn: ECSServiceRole
@@ -197,7 +212,7 @@ Resources:
         - !Ref 'AWS::Region'
         - AMIID
       SecurityGroups:
-        - !Ref EcsSecurityGroup
+        - !Ref randonlinkfrontendSG
       InstanceType: !Ref InstanceType
       IamInstanceProfile: !Ref EC2InstanceProfile
       KeyName: !Ref KeyName
@@ -371,3 +386,18 @@ Outputs:
           - DNSName
   taskdef:
     Value: !Ref taskdefinition
+randonlinkdb: 
+  Type: AWS::RDS::DBInstance
+  Properties: 
+    AllocatedStorage: "20"
+    DBInstanceClass: "db.t2.micro"
+    Engine: "MySQL"
+    EngineVersion: "5.6.13"
+    MasterUsername: 
+      Ref: "DBUser"
+    MasterUserPassword: 
+      Ref: "DBPassword"
+    PubliclyAccessible: false
+    VPCSecurityGroups: !Ref randonlinkbackendSG
+    DBInstanceIdentifier: randonlink
+    MultiAZ": true
