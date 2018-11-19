@@ -399,7 +399,7 @@ Resources:
     Properties:
       VpcId: !Ref VpcId
       CidrBlock: 10.0.3.0/24
-      AvailabilityZone: "us-east-1a"
+      AvailabilityZone: "us-east-1e"
   dbsubnetgroup: 
     Type: "AWS::RDS::DBSubnetGroup"
     Properties: 
