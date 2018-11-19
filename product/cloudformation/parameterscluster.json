@@ -12,11 +12,11 @@
         "ParameterValue": "vpc-b3e66ac8"
     },
     {
-      "ParameterKey": "SubnetId",
+      "ParameterKey": "Subnetid",
       "ParameterValue": "subnet-18409e7f"
     },
     {
-        "ParameterKey": "SubnetId",
+        "ParameterKey": "Subnetidtwo",
         "ParameterValue": "subnet-35476a0a"
     },
     {
