@@ -17,7 +17,7 @@ node {
     }
     stage('Docker build image'){
         dir("${applicationName}"){
-            sh "docker build --rm=false --build-arg=\"build=${env.BUILD_NUMBER}\" -t ${applicationName} ."
+            sh "sudo docker build --rm=false --build-arg=\"build=${env.BUILD_NUMBER}\" -t ${applicationName} ."
         }
     }
     stage("Upload Docker Image"){
