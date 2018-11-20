@@ -1,7 +1,7 @@
 
 def applicationName = "randonlink"
 
-node {   
+node('dev') {   
     stage('Checkout') {
         checkout scm
     }       
