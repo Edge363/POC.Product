@@ -60,24 +60,6 @@ Resources:
       FromPort: '22'
       ToPort: '22'
       CidrIp: 0.0.0.0/0
-  randonlinkbackendSG:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupName: randonlinkbackend
-      GroupDescription: Backend security group
-      VpcId: !Ref VpcId
-  backendinbound:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    Properties:
-      GroupId: !Ref randonlinkbackendSG
-      SourceSecurityGroupId: !Ref randonlinkfrontendSG
-      IpProtocol: -1
-  backendoutbound:
-    Type: 'AWS::EC2::SecurityGroupEgress'
-    Properties:
-      DestinationSecurityGroupId: !Ref randonlinkfrontendSG
-      GroupId: !Ref randonlinkbackendSG
-      IpProtocol: -1
   randonlinkfrontendSGALBports:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
@@ -252,7 +234,7 @@ Resources:
         - ''
         - - service/
           - !Ref ECSCluster
-          - /hello
+          - /
           - !GetAtt 
             - service
             - Name
@@ -351,38 +333,6 @@ Resources:
       Path: /
       Roles:
         - !Ref EC2Role
-#  randonlinkdb: 
-#    Type: AWS::RDS::DBInstance
-#    Properties: 
-#      AllocatedStorage: "20"
-#      DBInstanceClass: "db.t2.micro"
-#      Engine: "MySQL"
-#      MasterUsername: admin
-#      MasterUserPassword: password
-#      PubliclyAccessible: false
-#      VPCSecurityGroups: [!Ref randonlinkbackendSG]
-#      DBInstanceIdentifier: randonlink
-#      DBSubnetGroupName: !Ref dbsubnetgroup
-  privatesubnetdbone:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VpcId
-      CidrBlock: 10.0.2.0/24
-      AvailabilityZone: "us-east-1a"
-  privatesubnetdbtwo:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VpcId
-      CidrBlock: 10.0.3.0/24
-      AvailabilityZone: "us-east-1e"
-  dbsubnetgroup: 
-    Type: "AWS::RDS::DBSubnetGroup"
-    Properties: 
-      DBSubnetGroupDescription: "randonlink"
-      DBSubnetGroupName: dbsubnetgroup
-      SubnetIds: 
-        - !Ref privatesubnetdbone
-        - !Ref privatesubnetdbtwo
   randonlinkrecord:
     Type: AWS::Route53::RecordSet
     Properties:
@@ -407,3 +357,6 @@ Outputs:
           - DNSName
   taskdef:
     Value: !Ref taskdefinition
+  randonlinkfrontendSGID: 
+    !Ref randonlinkfrontendSG
+    

@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  ApplicationName:
+    Type: 'String'
+    Description: Name of Application to be launched.
+  VpcId:
+    Type: 'AWS::EC2::VPC::Id'
+    Description: Select a VPC that allows instances access to the Internet.
+Resources:
+  privatesubnetdbone:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: "us-east-1a"
+  privatesubnetdbtwo:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: "us-east-1e"
+  dbsubnetgroup: 
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: !Ref ApplicationName
+      DBSubnetGroupName: dbsubnetgroup
+      SubnetIds: 
+        - !Ref privatesubnetdbone
+        - !Ref privatesubnetdbtwo
+  randonlinkbackendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: randonlinkbackend
+      GroupDescription: Backend security group
+      VpcId: !Ref VpcId
+  backendinbound:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkbackendSG
+      SourceSecurityGroupId: !ImportValue randonlinkfrontendSGID
+      IpProtocol: -1
+  backendoutbound:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      DestinationSecurityGroupId: !ImportValue randonlinkfrontendSGID
+      GroupId: !Ref randonlinkbackendSG
+      IpProtocol: -1
+  productdynamo: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "Id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "Products"
+  randonlinkdbcluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: admin
+      MasterUserPassword: password
+      DatabaseName: randonlink
+      Engine: aurora
+      EngineMode: serverless
+      ScalingConfiguration:
+        AutoPause: true
+        MaxCapacity: 16
+        MinCapacity: 2
+        SecondsUntilAutoPause: 300
+      DBSubnetGroupName: !Ref dbsubnetgroup
+      VPCSecurityGroups: [!Ref randonlinkbackendSG]
