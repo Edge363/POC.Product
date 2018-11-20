@@ -1,1 +1,86 @@
-#refactor
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  ApplicationName:
+    Type: 'String'
+    Description: Name of Application to be launched.
+  VpcId:
+    Type: 'AWS::EC2::VPC::Id'
+    Description: Select a VPC that allows instances access to the Internet.
+Resources:
+  privatesubnetdbone:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: "us-east-1a"
+  privatesubnetdbtwo:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VpcId
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: "us-east-1e"
+  dbsubnetgroup: 
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: !Ref ApplicationName
+      DBSubnetGroupName: dbsubnetgroup
+      SubnetIds: 
+        - !Ref privatesubnetdbone
+        - !Ref privatesubnetdbtwo
+  randonlinkbackendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: randonlinkbackend
+      GroupDescription: Backend security group
+      VpcId: !Ref VpcId
+  randonlinkbackendinbound:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkbackendSG
+      SourceSecurityGroupId: !Ref randonlinkfrontendSG
+      IpProtocol: -1
+  randonlinkbackendoutbound:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      DestinationSecurityGroupId: !Ref randonlinkfrontendSG
+      GroupId: !Ref randonlinkbackendSG
+      IpProtocol: -1
+  randonlinkfrontendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Front end security group
+      GroupName: randonlinkfrontend
+      VpcId: !Ref VpcId
+  randonlinkfrontendSGHTTPinbound:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkfrontendSG
+      IpProtocol: tcp
+      FromPort: '80'
+      ToPort: '80'
+      CidrIp: 0.0.0.0/0
+  randonlinkfrontendSGSSHinbound:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkfrontendSG
+      IpProtocol: tcp
+      FromPort: '22'
+      ToPort: '22'
+      CidrIp: 0.0.0.0/0
+Outputs:
+  randonlinkfrontendSGID: 
+    Value: !Ref randonlinkfrontendSG
+    Export:
+      Name: randonlinkfrontendSGID
+  dbsubnetgroupID: 
+    Value: !Ref dbsubnetgroup
+    Export:
+      Name: dbsubnetgroupID
+  randonlinkbackendSGID: 
+    Value: !Ref randonlinkbackendSG
+    Export:
+      Name: randonlinkbackendSGID
+  randonlinkfrontendSGID: 
+    Value: !Ref randonlinkfrontendSG
+    Export:
+      Name: randonlinkfrontendSGID

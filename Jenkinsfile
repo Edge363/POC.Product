@@ -28,6 +28,12 @@ node('dev') {
    
     stage("Deploy Data Layer") {
         sh """
+            aws cloudformation create-stack --stack-name ${applicationName}data --template-body file://./cloudformation/networkingLayer.yml --region us-east-1 --parameters file://./cloudformation/networkingParams.json --capabilities CAPABILITY_IAM
+            aws cloudformation wait stack-create-complete --stack-name ${applicationName}data --region us-east-1
+        """
+    } 
+    stage("Deploy Data Layer") {
+        sh """
             aws cloudformation create-stack --stack-name ${applicationName}data --template-body file://./cloudformation/dataLayer.yml --region us-east-1 --parameters file://./cloudformation/dataLayerParams.json --capabilities CAPABILITY_IAM
             aws cloudformation wait stack-create-complete --stack-name ${applicationName}data --region us-east-1
         """
