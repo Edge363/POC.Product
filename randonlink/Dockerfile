@@ -6,16 +6,16 @@ RUN git clone -b master --single-branch https://github.com/Edge363/pocproduct.gi
 RUN CGO_ENABLED=0 
 RUN GOOS=linux 
 RUN GOARCH=amd64    
-WORKDIR /go/src/pocproduct/product
+WORKDIR /go/src/pocproduct/randonlink
 COPY . . 
 RUN go get
 RUN go install
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o product .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o randonlink .
 
 FROM alpine:latest 
 LABEL image=release
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
-COPY --from=0 /go/src/pocproduct/product .
-CMD ["./product"]  
+COPY --from=0 /go/src/pocproduct/randonlink .
+CMD ["./randonlink"]  
 # docker run -p 8080:8080 -it --rm --name product product 

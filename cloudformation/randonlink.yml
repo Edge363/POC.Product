@@ -105,7 +105,7 @@ Resources:
         - Name: !Ref ApplicationName
           Cpu: '10'
           Essential: 'true'
-          Image: 'httpd:2.4'
+          Image: '288372509437.dkr.ecr.us-east-1.amazonaws.com/randonlink:latest'
           Memory: '300'
           LogConfiguration:
             LogDriver: awslogs
@@ -118,32 +118,6 @@ Resources:
               SourceVolume: my-vol
           PortMappings:
             - ContainerPort: 80
-        - Name: busybox
-          Cpu: 10
-          Command:
-            - >-
-              /bin/sh -c "while true; do echo '<html> <head> <title>Amazon ECS
-              Sample App</title> <style>body {margin-top: 40px;
-              background-color: #333;} </style> </head><body> <div
-              style=color:white;text-align:center> <h1>Amazon ECS Sample
-              App</h1> <h2>Congratulations!</h2> <p>Your application is now
-              running on a container in Amazon ECS.</p>' > top; /bin/date > date
-              ; echo '</div></body></html>' > bottom; cat top date bottom >
-              /usr/local/apache2/htdocs/index.html ; sleep 1; done"
-          EntryPoint:
-            - sh
-            - '-c'
-          Essential: false
-          Image: busybox
-          Memory: 200
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group: !Ref CloudwatchLogsGroup
-              awslogs-region: !Ref 'AWS::Region'
-              awslogs-stream-prefix: ecs-demo-app
-          VolumesFrom:
-            - SourceContainer: !Ref ApplicationName
       Volumes:
         - Name: my-vol
   ECSALB:
@@ -418,6 +392,31 @@ Resources:
       Comment: 'DNS name for my instance.'
       Name: 'randon.link'
       Type: A
+  rdskey:
+    Type: AWS::KMS::Key
+    Properties:
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: rdsrandonlink
+        Statement:
+          - Sid: Enable rds connection randon link
+            Effect: Allow
+            Principal:
+              AWS: !Join 
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':root'
+            Action: 'kms:*'
+            Resource: '*'
+      Tags:
+        - Key: !Ref Key
+          Value: !Ref Value
+Parameters:
+  Key:
+    Type: String
+  Value:
+    Type: String
 Outputs:
   ecsservice:
     Value: !Ref service
