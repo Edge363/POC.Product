@@ -252,7 +252,7 @@ Resources:
         - ''
         - - service/
           - !Ref ECSCluster
-          - /
+          - /hello
           - !GetAtt 
             - service
             - Name
