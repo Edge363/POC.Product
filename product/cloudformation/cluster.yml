@@ -408,7 +408,16 @@ Resources:
       SubnetIds: 
         - !Ref privatesubnetdbone
         - !Ref privatesubnetdbtwo
-      
+  randonlinkrecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName: !GetAtt ECSALB.DNSName
+        HostedZoneId: !GetAtt ECSALB.CanonicalHostedZoneID
+      HostedZoneId: Z1P7IXC8UCSOZR
+      Comment: 'DNS name for my instance.'
+      Name: 'randon.link'
+      Type: A
 Outputs:
   ecsservice:
     Value: !Ref service
