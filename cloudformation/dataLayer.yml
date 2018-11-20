@@ -96,7 +96,7 @@ Resources:
         MinCapacity: 2
         SecondsUntilAutoPause: 300
       DBSubnetGroupName: !Ref dbsubnetgroup
-      VPCSecurityGroups: [!Ref randonlinkbackendSG]
+      VpcSecurityGroups: [!Ref randonlinkbackendSG]
 Outputs:
   randonlinkfrontendSGID: 
     Value: !Ref randonlinkfrontendSG
