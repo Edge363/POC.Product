@@ -100,3 +100,5 @@ Resources:
 Outputs:
   randonlinkfrontendSGID: 
     Value: !Ref randonlinkfrontendSG
+    Export:
+      Name: randonlinkfrontendSGID
