@@ -319,6 +319,7 @@ Resources:
                   - 'ecs:Submit*'
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
+                  - 'ecr:*'
                 Resource: '*'
   AutoscalingRole:
     Type: 'AWS::IAM::Role'
