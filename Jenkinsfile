@@ -27,6 +27,6 @@ node('dev') {
     }
     stage("deploy") {
          
-        sh " aws cloudformation create-stack --stack-name ${applicationName} --template-body file://./${applicationName}.yml --region us-east-1 --parameters file://./${applicationName}parameters.json --capabilities CAPABILITY_IAM"
+        sh " aws cloudformation create-stack --stack-name ${applicationName} --template-body file://./cloudformation/${applicationName}.yml --region us-east-1 --parameters file://./cloudformation/${applicationName}parameters.json --capabilities CAPABILITY_IAM"
     }
 }
