@@ -392,11 +392,6 @@ Resources:
       Comment: 'DNS name for my instance.'
       Name: 'randon.link'
       Type: A
-Parameters:
-  Key:
-    Type: String
-  Value:
-    Type: String
 Outputs:
   ecsservice:
     Value: !Ref service
