@@ -8,7 +8,6 @@ node {
     }       
     stage('Build'){
         dir('randonlink'){
-            sh 'go get'
             sh 'go build'
         }
     }
