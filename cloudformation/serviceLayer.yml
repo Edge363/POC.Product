@@ -201,7 +201,6 @@ Resources:
                   - 'elasticloadbalancing:RegisterTargets'
                   - 'ec2:Describe*'
                   - 'ec2:AuthorizeSecurityGroupIngress'
-                  - 'dynamodb:*'
                 Resource: '*'
   ServiceScalingTarget:
     Type: 'AWS::ApplicationAutoScaling::ScalableTarget'
@@ -281,6 +280,7 @@ Resources:
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
                   - 'ecr:*'
+                  - 'dynamodb:*'
                 Resource: '*'
   AutoscalingRole:
     Type: 'AWS::IAM::Role'
