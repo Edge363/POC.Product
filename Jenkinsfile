@@ -2,7 +2,6 @@
 def applicationName = "randonlink"
 
 node {   
-    sh 'echo $GOPATH'
     stage('Checkout') {
         checkout scm
     }       
@@ -17,7 +16,7 @@ node {
         }
     }
     stage('Docker build image'){
-        dir('product'){
+        dir("${applicationName}"){
             sh "docker build --rm=false --build-arg=\"build=${env.BUILD_NUMBER}\" -t ${applicationName} ."
         }
     }
