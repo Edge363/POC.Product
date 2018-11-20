@@ -99,4 +99,4 @@ Resources:
       VPCSecurityGroups: [!Ref randonlinkbackendSG]
 Outputs:
   randonlinkfrontendSGID: 
-    !Ref randonlinkfrontendSG
+    Value: !Ref randonlinkfrontendSG
