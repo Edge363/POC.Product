@@ -27,7 +27,7 @@ node('dev') {
         }
     }
     stage("deploy") {
-        
+         
         sh "aws cloudformation create-stack-wait --stack-name ${applicationName} --template-body file://./cloudformation/${applicationName}.yml --region us-east-1 --parameters file://./cloudformation/${applicationName}parameters.json"
     }
 }
