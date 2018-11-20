@@ -1,7 +1,7 @@
 
 def applicationName = "randonlink"
 
-node('dev') {   
+node {   
     sh 'echo $GOPATH'
     stage('Checkout') {
         checkout scm
