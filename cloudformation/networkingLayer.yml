@@ -80,7 +80,3 @@ Outputs:
     Value: !Ref randonlinkbackendSG
     Export:
       Name: randonlinkbackendSGID
-  randonlinkfrontendSGID: 
-    Value: !Ref randonlinkfrontendSG
-    Export:
-      Name: randonlinkfrontendSGID
