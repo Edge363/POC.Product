@@ -38,36 +38,14 @@ Mappings:
 Resources:
   ECSCluster:
     Type: 'AWS::ECS::Cluster'
-  randonlinkfrontendSG:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: Front end security group
-      GroupName: randonlinkfrontend
-      VpcId: !Ref VpcId
-  randonlinkfrontendSGHTTPinbound:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    Properties:
-      GroupId: !Ref randonlinkfrontendSG
-      IpProtocol: tcp
-      FromPort: '80'
-      ToPort: '80'
-      CidrIp: 0.0.0.0/0
-  randonlinkfrontendSGSSHinbound:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    Properties:
-      GroupId: !Ref randonlinkfrontendSG
-      IpProtocol: tcp
-      FromPort: '22'
-      ToPort: '22'
-      CidrIp: 0.0.0.0/0
   randonlinkfrontendSGALBports:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
-      GroupId: !Ref randonlinkfrontendSG
+      GroupId: !ImportValue randonlinkfrontendSGID
       IpProtocol: tcp
       FromPort: '31000'
       ToPort: '61000'
-      SourceSecurityGroupId: !Ref randonlinkfrontendSG
+      SourceSecurityGroupId: !ImportValue randonlinkfrontendSGID
   CloudwatchLogsGroup:
     Type: 'AWS::Logs::LogGroup'
     Properties:
@@ -112,7 +90,7 @@ Resources:
           Value: '30'
       Subnets: !Ref SubnetId
       SecurityGroups:
-        - !Ref randonlinkfrontendSG
+        - !ImportValue randonlinkfrontendSGID
   ALBListener:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     DependsOn: ECSServiceRole
@@ -172,7 +150,7 @@ Resources:
         - !Ref 'AWS::Region'
         - AMIID
       SecurityGroups:
-        - !Ref randonlinkfrontendSG
+        - !ImportValue randonlinkfrontendSGID
       InstanceType: !Ref InstanceType
       IamInstanceProfile: !Ref EC2InstanceProfile
       KeyName: !Ref KeyName
@@ -223,6 +201,7 @@ Resources:
                   - 'elasticloadbalancing:RegisterTargets'
                   - 'ec2:Describe*'
                   - 'ec2:AuthorizeSecurityGroupIngress'
+                  - 'dynamodb:*'
                 Resource: '*'
   ServiceScalingTarget:
     Type: 'AWS::ApplicationAutoScaling::ScalableTarget'
@@ -357,6 +336,4 @@ Outputs:
           - DNSName
   taskdef:
     Value: !Ref taskdefinition
-  randonlinkfrontendSGID: 
-    !Ref randonlinkfrontendSG
     

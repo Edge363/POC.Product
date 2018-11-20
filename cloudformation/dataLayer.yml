@@ -33,18 +33,40 @@ Resources:
       GroupName: randonlinkbackend
       GroupDescription: Backend security group
       VpcId: !Ref VpcId
-  backendinbound:
+  randonlinkbackendinbound:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       GroupId: !Ref randonlinkbackendSG
-      SourceSecurityGroupId: !ImportValue randonlinkfrontendSGID
+      SourceSecurityGroupId: !Ref randonlinkfrontendSG
       IpProtocol: -1
-  backendoutbound:
+  randonlinkbackendoutbound:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
-      DestinationSecurityGroupId: !ImportValue randonlinkfrontendSGID
+      DestinationSecurityGroupId: !Ref randonlinkfrontendSG
       GroupId: !Ref randonlinkbackendSG
       IpProtocol: -1
+  randonlinkfrontendSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Front end security group
+      GroupName: randonlinkfrontend
+      VpcId: !Ref VpcId
+  randonlinkfrontendSGHTTPinbound:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkfrontendSG
+      IpProtocol: tcp
+      FromPort: '80'
+      ToPort: '80'
+      CidrIp: 0.0.0.0/0
+  randonlinkfrontendSGSSHinbound:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref randonlinkfrontendSG
+      IpProtocol: tcp
+      FromPort: '22'
+      ToPort: '22'
+      CidrIp: 0.0.0.0/0
   productdynamo: 
     Type: AWS::DynamoDB::Table
     Properties: 
@@ -75,3 +97,6 @@ Resources:
         SecondsUntilAutoPause: 300
       DBSubnetGroupName: !Ref dbsubnetgroup
       VPCSecurityGroups: [!Ref randonlinkbackendSG]
+Outputs:
+  randonlinkfrontendSGID: 
+    !Ref randonlinkfrontendSG

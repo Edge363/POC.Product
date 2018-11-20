@@ -39,16 +39,10 @@ var routes = Routes{
 		productPut,
 	},
 	Route{
-		"productPut",
+		"productPost",
 		"POST",
 		"/product/{productid}",
 		productPost,
-	},
-	Route{
-		"Create Dynamo Table",
-		"POST",
-		"/productDynamo",
-		tablePost,
 	},
 	Route{
 		"productDelete",
