@@ -28,7 +28,7 @@ node('dev') {
    
     stage("Deploy Networking Layer") {
         sh """
-            aws cloudformation create-stack --stack-name ${applicationName}data --template-body file://./cloudformation/networkingLayer.yml --region us-east-1 --parameters file://./cloudformation/networkingLayerParams.json --capabilities CAPABILITY_IAM
+            aws cloudformation create-stack --stack-name ${applicationName}networking --template-body file://./cloudformation/networkingLayer.yml --region us-east-1 --parameters file://./cloudformation/networkingLayerParams.json --capabilities CAPABILITY_IAM
             aws cloudformation wait stack-create-complete --stack-name ${applicationName}networking --region us-east-1
         """
     } 
