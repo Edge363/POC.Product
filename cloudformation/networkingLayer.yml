@@ -84,19 +84,19 @@ Outputs:
     Value: !Ref randonlinkfrontendSG
     Export:
       Name: randonlinkfrontendSGID
-  dbsubnetgroupID: 
-    Value: !Ref dbsubnetgroup
-    Export:
-      Name: dbsubnetgroupID
-  dbsubnetgroupID: 
-    Value: !Ref publicsubnetone
-    Export:
-      Name: publicsubnetoneID
-  dbsubnetgroupID: 
-    Value: !Ref publicsubnettwo
-    Export:
-      Name: publicsubnettwoID
   randonlinkbackendSGID: 
     Value: !Ref randonlinkbackendSG
     Export:
       Name: randonlinkbackendSGID
+  dbsubnetgroupID: 
+    Value: !Ref dbsubnetgroup
+    Export:
+      Name: dbsubnetgroupID
+  publicsubnetoneID: 
+    Value: !Ref publicsubnetone
+    Export:
+      Name: publicsubnetoneID
+  publicsubnettwoID: 
+    Value: !Ref publicsubnettwo
+    Export:
+      Name: publicsubnettwoID
