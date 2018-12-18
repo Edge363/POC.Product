@@ -9,9 +9,6 @@ Parameters:
   VpcId:
     Type: 'AWS::EC2::VPC::Id'
     Description: Select a VPC that allows instances access to the Internet.
-  SubnetId:
-    Type: 'List<AWS::EC2::Subnet::Id>'
-    Description: Select at two subnets in your selected VPC.
   DesiredCapacity:
     Type: Number
     Default: '1'
@@ -88,7 +85,9 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
-      Subnets: !Ref SubnetId
+      Subnets:
+        - !ImportValue publicsubnetoneID
+        - !ImportValue publicsubnettwoID
       SecurityGroups:
         - !ImportValue randonlinkfrontendSGID
   ALBListener:
@@ -131,7 +130,9 @@ Resources:
   ECSAutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
-      VPCZoneIdentifier: !Ref SubnetId
+      VPCZoneIdentifier: 
+        - !ImportValue publicsubnetoneID
+        - !ImportValue publicsubnettwoID
       LaunchConfigurationName: !Ref ContainerInstances
       MinSize: '1'
       MaxSize: !Ref MaxSize

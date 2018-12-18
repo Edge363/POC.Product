@@ -12,10 +12,6 @@
         "ParameterValue": "vpc-b3e66ac8"
     },
     {
-      "ParameterKey": "SubnetId",
-      "ParameterValue": "subnet-18409e7f,subnet-35476a0a"
-    },
-    {
         "ParameterKey": "DesiredCapacity",
         "ParameterValue": "1"
     },
