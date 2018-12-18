@@ -20,14 +20,15 @@ Resources:
       CidrBlock: 10.0.3.0/24
       AvailabilityZone: "us-east-1e"
   publicsubnetone:
-    Type: AWS::EC2::Subnet
     Properties:
+      MapPublicIpOnLaunch: true
       VpcId: !Ref VpcId
       CidrBlock: 10.0.4.0/24
       AvailabilityZone: "us-east-1a"
   publicsubnettwo:
     Type: AWS::EC2::Subnet
     Properties:
+      MapPublicIpOnLaunch: true
       VpcId: !Ref VpcId
       CidrBlock: 10.0.5.0/24
       AvailabilityZone: "us-east-1e"
