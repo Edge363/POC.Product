@@ -85,8 +85,11 @@ Resources:
       LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
-      Subnets: [!ImportValue publicsubnetoneID,!ImportValue  publicsubnettwoID ]
-      SecurityGroups: !ImportValue randonlinkfrontendSGID
+      Subnets:
+        - !ImportValue publicsubnetoneID
+        - !ImportValue publicsubnettwoID
+      SecurityGroups:
+        - !ImportValue randonlinkfrontendSGID
   ALBListener:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
     DependsOn: ECSServiceRole
