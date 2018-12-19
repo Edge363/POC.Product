@@ -19,14 +19,14 @@ Resources:
       VpcId: !Ref VpcId
       CidrBlock: 10.0.3.0/24
       AvailabilityZone: "us-east-1e"
-  publicsubnetone:
+  randonlinkpublicsubnetone:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: true
       VpcId: !Ref VpcId
       CidrBlock: 10.0.4.0/24
       AvailabilityZone: "us-east-1a"
-  publicsubnettwo:
+  randonlinkpublicsubnettwo:
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: true
@@ -94,11 +94,11 @@ Outputs:
     Value: !Ref dbsubnetgroup
     Export:
       Name: dbsubnetgroupID
-  publicsubnetoneID: 
-    Value: !Ref publicsubnetone
+  randonlinkpublicsubnetoneID: 
+    Value: !Ref randonlinkpublicsubnetone
     Export:
-      Name: publicsubnetoneID
-  publicsubnettwoID: 
-    Value: !Ref publicsubnettwo
+      Name: randonlinkpublicsubnetoneID
+  randonlinkpublicsubnettwoID: 
+    Value: !Ref randonlinkpublicsubnettwo
     Export:
-      Name: publicsubnettwoID
+      Name: randonlinkpublicsubnettwoID

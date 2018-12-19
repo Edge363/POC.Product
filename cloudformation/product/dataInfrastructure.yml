@@ -19,18 +19,3 @@ Resources:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
       TableName: "Products"
-  randonlinkdbcluster:
-    Type: AWS::RDS::DBCluster
-    Properties:
-      MasterUsername: admin
-      MasterUserPassword: password
-      DatabaseName: randonlink
-      Engine: aurora
-      EngineMode: serverless
-      ScalingConfiguration:
-        AutoPause: true
-        MaxCapacity: 16
-        MinCapacity: 2
-        SecondsUntilAutoPause: 300
-      DBSubnetGroupName: !ImportValue dbsubnetgroupID
-      VpcSecurityGroupIds: [!ImportValue randonlinkbackendSGID]

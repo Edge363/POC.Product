@@ -1,5 +1,5 @@
 
-def applicationName = "randonlink"
+def applicationName = "product"
 
 node('dev') {   
     stage('Checkout') {
@@ -25,7 +25,6 @@ node('dev') {
             docker.image("${applicationName}").push("latest")
         }
     }
-   
     stage("Deploy Networking Layer") {
         sh """
             aws cloudformation create-stack --stack-name ${applicationName}networking --template-body file://./cloudformation/networkingLayer.yml --region us-east-1 --parameters file://./cloudformation/networkingLayerParams.json --capabilities CAPABILITY_IAM
