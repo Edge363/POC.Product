@@ -34,7 +34,7 @@ node('dev') {
     }
 }
 
-def compileApplication(var application){
+def compileApplication(application){
     if(application[1] == "java"){
             stage('Compile'){
                 dir(${application[0]}){
@@ -51,7 +51,7 @@ def compileApplication(var application){
 
     }
 }
-def testApplication(var application){
+def testApplication(application){
     if(application[1] == "java"){
             stage('Test'){
                 dir(${application[0]}){
