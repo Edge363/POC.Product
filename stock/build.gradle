@@ -1,0 +1,86 @@
+buildscript {
+	ext {
+		kotlinVersion = '1.2.10'
+		springBootVersion = '2.0.0.M7'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+	}
+}
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.weather'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+compileKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+	kotlinOptions.jvmTarget = "1.8"
+}
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+}
+
+
+ext {
+	springCloudVersion = 'Finchley.M5'
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-webflux')
+	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
+	compile("org.jetbrains.kotlin:kotlin-reflect")
+	compileOnly('org.projectlombok:lombok')
+    compile("io.projectreactor.ipc:reactor-netty")
+    compile "com.fasterxml.jackson.core:jackson-core:2.9.2"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.9.2"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.2"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2"
+	compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.472'
+	compile 'com.amazonaws:aws-java-sdk-s3'
+
+    runtime files('src/main/resources')
+    testCompile("io.projectreactor:reactor-test")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('io.projectreactor:reactor-test')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile(
+            'org.junit.jupiter:junit-jupiter-api:5.0.2',
+            'org.junit.jupiter:junit-jupiter-params:5.0.2'
+    )
+    testCompile "com.fasterxml.jackson.core:jackson-core:2.9.2"
+    testCompile "com.fasterxml.jackson.core:jackson-annotations:2.9.2"
+    testCompile "com.fasterxml.jackson.core:jackson-databind:2.9.2"
+    testCompile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2"
+    testCompile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
+    testCompile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
+    testCompile('org.springframework.boot:spring-boot-starter-data-redis-reactive')
+    testCompile('org.springframework.boot:spring-boot-starter-webflux')
+    testCompile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
+    testCompile("org.jetbrains.kotlin:kotlin-reflect")
+    testCompileOnly('org.projectlombok:lombok')
+    testCompile("io.projectreactor.ipc:reactor-netty")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.228'
+	}
+}

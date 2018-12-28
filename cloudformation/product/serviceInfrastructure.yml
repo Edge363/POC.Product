@@ -48,7 +48,7 @@ Resources:
       Comment: 'DNS name for my instance.'
       Name: 'randon.link'
       Type: A
-  ECSEC2Role:
+  ECSRole:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -102,7 +102,7 @@ Resources:
                   - 'ecs:DescribeServices'
                   - 'ecs:UpdateService'
                 Resource: '*'
-  ECSClusterRole:
+  ProductServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -115,7 +115,7 @@ Resources:
               - 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: ecs-service
+        - PolicyName: product-service
           PolicyDocument:
             Statement:
               - Effect: Allow
@@ -127,6 +127,7 @@ Resources:
                   - 'elasticloadbalancing:RegisterTargets'
                   - 'ec2:Describe*'
                   - 'ec2:AuthorizeSecurityGroupIngress'
+                  - 'dynamodb:*'
                 Resource: '*'
   ECSAutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -166,12 +167,12 @@ Resources:
 
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource
           ECSAutoScalingGroup --region ${AWS::Region}
-  ECSEC2InstanceProfile:
+  ECSInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
       Path: /
       Roles:
-        - !Ref ECSEC2Role
+        - !Ref ECSRole
   RandonLinkfrontendSGALBports:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
@@ -195,7 +196,6 @@ Resources:
         - !ImportValue randonlinkfrontendSGID
   RandonLinkALBListener:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
-    DependsOn: ECSClusterRole
     Properties:
       DefaultActions:
         - Type: forward
@@ -337,11 +337,9 @@ Outputs:
     Value: !Ref ECSCluster
   RandonLinkECSALB:
     Description: Your ALB DNS URL
-    Value: !Join 
-      - ''
-      - - !GetAtt 
-          - RandonLinkECSALB
-          - DNSName
+    Value: !Ref RandonLinkECSALB
   ProductTaskDefinition:
     Value: !Ref ProductTaskDefinition
+  AutoScalingRoleArn:
+    Value: !Ref AutoscalingRole.Arn
     

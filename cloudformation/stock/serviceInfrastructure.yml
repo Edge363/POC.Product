@@ -36,70 +36,92 @@ Resources:
   ####################NON-SHARED RESOURCES####################
   ####################NON-SHARED RESOURCES####################
   ####################NON-SHARED RESOURCES####################
-  ProductALBListenerRule:
+  StockALBListenerRule:
     Type: 'AWS::ElasticLoadBalancingV2::ListenerRule'
-    DependsOn: RandonLinkALBListener
     Properties:
       Actions:
         - Type: forward
-          TargetGroupArn: !Ref ProductTG
+          TargetGroupArn: !Ref StockTG
       Conditions:
         - Field: path-pattern
           Values:
             - /stock
-      ListenerArn: !Ref RandonLinkALBListener
+      ListenerArn: !ImportValue RandonLinkALBListener
       Priority: 1
-  ProductTG:
+  StockTG:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
-    DependsOn: RandonLinkECSALB
     Properties:
       HealthCheckIntervalSeconds: 10
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
-      Name: ProductTG
+      Name: StockTG
       Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 2
       VpcId: !Ref VpcId
-  ProductService:
+  StockService:
     Type: 'AWS::ECS::Service'
-    DependsOn: RandonLinkALBListener
     Properties:
-      Cluster: !Ref ECSCluster
+      Cluster: !ImportValue ECSCluster
       DesiredCount: '1'
       LoadBalancers:
         - ContainerName: !Ref ApplicationName
           ContainerPort: '80'
-          TargetGroupArn: !Ref ProductTG
-      Role: !Ref ProductServiceRole
-      TaskDefinition: !Ref ProductTaskDefinition
-  ProductServiceScalingTarget:
+          TargetGroupArn: !Ref StockTG
+      Role: !Ref StockServiceRole
+      TaskDefinition: !Ref StockTaskDefinition
+  StockServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: stock-service
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'elasticloadbalancing:DeregisterInstancesFromLoadBalancer'
+                  - 'elasticloadbalancing:DeregisterTargets'
+                  - 'elasticloadbalancing:Describe*'
+                  - 'elasticloadbalancing:RegisterInstancesWithLoadBalancer'
+                  - 'elasticloadbalancing:RegisterTargets'
+                  - 'ec2:Describe*'
+                  - 'ec2:AuthorizeSecurityGroupIngress'
+                  - 'rds:*'
+                Resource: '*'
+  StockServiceScalingTarget:
     Type: 'AWS::ApplicationAutoScaling::ScalableTarget'
-    DependsOn: ProductService
+    DependsOn: StockService
     Properties:
       MaxCapacity: 2
       MinCapacity: 1
       ResourceId: !Join 
         - ''
-        - - ProductService/
-          - !Ref ECSCluster
+        - - StockService/
+          - !ImportValue ECSCluster
           - /
           - !GetAtt 
-            - ProductService
+            - StockService
             - Name
-      RoleARN: !GetAtt 
-        - AutoscalingRole
-        - Arn
+      RoleARN: !ImportValue AutoScalingRoleArn
       ScalableDimension: 'ecs:service:DesiredCount'
       ServiceNamespace: ecs
-  ProductServiceScalingPolicy:
+  StockServiceScalingPolicy:
     Type: 'AWS::ApplicationAutoScaling::ScalingPolicy'
     Properties:
       PolicyName: AStepPolicy
       PolicyType: StepScaling
-      ScalingTargetId: !Ref ProductServiceScalingTarget
+      ScalingTargetId: !Ref StockServiceScalingTarget
       StepScalingPolicyConfiguration:
         AdjustmentType: PercentChangeInCapacity
         Cooldown: 60
@@ -107,25 +129,7 @@ Resources:
         StepAdjustments:
           - MetricIntervalLowerBound: 0
             ScalingAdjustment: 200
-  ProductServiceAlarmScaleUp:
-    Type: 'AWS::CloudWatch::Alarm'
-    Properties:
-      EvaluationPeriods: '1'
-      Statistic: Average
-      Threshold: '10'
-      AlarmDescription: Alarm if our ALB generates too many HTTP 500s.
-      Period: '60'
-      AlarmActions:
-        - !Ref ProductServiceScalingPolicy
-      Namespace: AWS/ApplicationELB
-      Dimensions:
-        - Name: LoadBalancer
-          Value: !GetAtt 
-            - RandonLinkECSALB
-            - LoadBalancerFullName
-      ComparisonOperator: GreaterThanThreshold
-      MetricName: HTTPCode_ELB_5XX_Count
-  ProductCloudwatchLogsGroup:
+  StockCloudwatchLogsGroup:
     Type: 'AWS::Logs::LogGroup'
     Properties:
       LogGroupName: !Join 
@@ -133,7 +137,7 @@ Resources:
         - - ECSLogGroup
           - !Ref 'AWS::StackName'
       RetentionInDays: 1
-  ProductTaskDefinition:
+  StockTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
       Family: !Join 
@@ -149,7 +153,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: !Ref ProductCloudwatchLogsGroup
+              awslogs-group: !Ref StockCloudwatchLogsGroup
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: !Ref ApplicationName
           MountPoints:
@@ -159,18 +163,12 @@ Resources:
             - ContainerPort: 80
       Volumes:
         - Name: my-vol
+      Environment:
+        - Name: "RDS_ADDRESS"
+          Value: !ImportValue stocksdbclusteraddress
 Outputs:
-  ProductService:
-    Value: !Ref ProductService
-  ECSCluster:
-    Value: !Ref ECSCluster
-  RandonLinkECSALB:
-    Description: Your ALB DNS URL
-    Value: !Join 
-      - ''
-      - - !GetAtt 
-          - RandonLinkECSALB
-          - DNSName
-  ProductTaskDefinition:
-    Value: !Ref ProductTaskDefinition
+  StockService:
+    Value: !Ref StockService
+  StockTaskDefinition:
+    Value: !Ref StockTaskDefinition
     
