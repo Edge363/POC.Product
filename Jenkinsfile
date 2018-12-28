@@ -5,32 +5,43 @@ node('dev') {
     stage('Checkout') {
         checkout scm
     }
-    deploySharedResources()
-    for (application in applications) {
-        compileApplication(application)
-        testApplication(application)
-        stage('Build Image'){
-            dir("${application[0]}"){
-                sh "docker build --rm=false --build-arg=\"build=${env.BUILD_NUMBER}\" -t ${application[0]} ."
+    try(){
+        deploySharedResources()
+        for (application in applications) {
+            compileApplication(application)
+            testApplication(application)
+            stage('Build Image'){
+                dir("${application[0]}"){
+                    sh "docker build --rm=false --build-arg=\"build=${env.BUILD_NUMBER}\" -t ${application[0]} ."
+                }
+            }
+            stage('Upload Image'){
+                docker.withRegistry("https://288372509437.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:Jenkins_Slave_IAM") {
+                    docker.image("${application[0]}").push("latest")
+                }
+            }
+            stage('Deploy Data Infrastructure') {
+                sh """
+                    aws cloudformation create-stack --stack-name ${application[0]}data --template-body file://./cloudformation/${application[0]}/dataInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/dataInfrastructureParams.json --capabilities CAPABILITY_IAM
+                    aws cloudformation wait stack-create-complete --stack-name ${application[0]}data --region us-east-1
+                """
+            } 
+            stage('Deploy Service Infrastructure') {
+                sh """
+                    aws cloudformation create-stack --stack-name ${application[0]}service --template-body file://./cloudformation/${application[0]}/serviceInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/serviceInfrastructureParams.json --capabilities CAPABILITY_IAM
+                    aws cloudformation wait stack-create-complete --stack-name ${application[0]}service --region us-east-1
+                """
             }
         }
-        stage('Upload Image'){
-            docker.withRegistry("https://288372509437.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:Jenkins_Slave_IAM") {
-                docker.image("${application[0]}").push("latest")
-            }
-        }
-        stage('Deploy Data Infrastructure') {
-            sh """
-                aws cloudformation create-stack --stack-name ${application[0]}data --template-body file://./cloudformation/${application[0]}/dataInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/dataInfrastructureParams.json --capabilities CAPABILITY_IAM
-                aws cloudformation wait stack-create-complete --stack-name ${application[0]}data --region us-east-1
+    } catch (Exception e) {
+         for (application in applications) {
+             sh """
+                aws cloudformation delete-stack --stack-name ${application[0]}data --template-body file://./cloudformation/${application[0]}/dataInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/dataInfrastructureParams.json --capabilities CAPABILITY_IAM
             """
-        } 
-        stage('Deploy Service Infrastructure') {
             sh """
-                aws cloudformation create-stack --stack-name ${application[0]}service --template-body file://./cloudformation/${application[0]}/serviceInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/serviceInfrastructureParams.json --capabilities CAPABILITY_IAM
-                aws cloudformation wait stack-create-complete --stack-name ${application[0]}service --region us-east-1
+                aws cloudformation delete-stack --stack-name ${application[0]}service --template-body file://./cloudformation/${application[0]}/serviceInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/serviceInfrastructureParams.json --capabilities CAPABILITY_IAM
             """
-        }
+         }
     }
 }
 
@@ -69,7 +80,7 @@ def testApplication(application){
 }
 
 def deploySharedResources(){
-    stage('Deploy Networking Infrastructure') {
+    stage('Deploy Shared Infrastructure') {
         sh """
             aws cloudformation create-stack --stack-name sharednetworking --template-body file://./cloudformation/shared/networkingInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/shared/networkingInfrastructureParams.json --capabilities CAPABILITY_IAM
             aws cloudformation wait stack-create-complete --stack-name sharednetworking --region us-east-1
