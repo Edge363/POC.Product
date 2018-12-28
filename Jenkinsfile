@@ -37,10 +37,10 @@ node('dev') {
         deleteSharedResources()
          for (application in applications) {
              sh """
-                aws cloudformation delete-stack --stack-name ${application[0]}data --region us-east-1--capabilities CAPABILITY_IAM
+                aws cloudformation delete-stack --stack-name ${application[0]}data --region us-east-1 --capabilities CAPABILITY_IAM
             """
             sh """
-                aws cloudformation delete-stack --stack-name ${application[0]}service --region us-east-1--capabilities CAPABILITY_IAM
+                aws cloudformation delete-stack --stack-name ${application[0]}service --region us-east-1 --capabilities CAPABILITY_IAM
             """
          }
     }
@@ -90,6 +90,6 @@ def deploySharedResources(){
 }
 def deleteSharedResources(){
     sh """
-        aws cloudformation delete-stack --stack-name sharednetworking --region us-east-1--capabilities CAPABILITY_IAM
+        aws cloudformation delete-stack --stack-name sharednetworking --region us-east-1 --capabilities CAPABILITY_IAM
     """
 }
