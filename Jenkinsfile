@@ -1,12 +1,13 @@
 
 def applications = [["product","go"], "stock","java"] 
-node('dev') { 
+node('dev') {         
+    stage('Checkout') {
+        checkout scm
+    }
     deploySharedResources()
     for (application in applications) {
         
-        stage('Checkout') {
-            checkout scm
-        }       
+       
         compileApplication(application)
         testApplication(application)
         stage('Build Image'){
