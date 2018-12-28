@@ -87,3 +87,8 @@ def deploySharedResources(){
         """
     } 
 }
+def deleteSharedResources(){
+    sh """
+        aws cloudformation delete-stack --stack-name sharednetworking --template-body file://./cloudformation/shared/networkingInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/shared/networkingInfrastructureParams.json --capabilities CAPABILITY_IAM
+    """
+}
