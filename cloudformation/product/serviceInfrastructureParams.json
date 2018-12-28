@@ -8,11 +8,19 @@
         "ParameterValue": "1"
     },
     {
-      "ParameterKey": "MaxSize",
-      "ParameterValue": "2"
+        "ParameterKey": "MaxSize",
+        "ParameterValue": "2"
     },
     {
-      "ParameterKey": "InstanceType",
-      "ParameterValue": "t2.micro"
+        "ParameterKey": "InstanceType",
+        "ParameterValue": "t2.micro"
+    },
+    {
+        "ParameterKey": "ApplicationName",
+        "ParameterValue": "product" 
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-b3e66ac8"
     }
 ]

@@ -1,13 +1,12 @@
 
 def applications = [["product","go"], "stock","java"] 
+
 node('dev') {         
     stage('Checkout') {
         checkout scm
     }
     deploySharedResources()
     for (application in applications) {
-        
-       
         compileApplication(application)
         testApplication(application)
         stage('Build Image'){
@@ -37,37 +36,38 @@ node('dev') {
 
 def compileApplication(application){
     if(application[1] == "java"){
-            stage('Compile'){
-                dir("${application[0]}"){
-                    sh './gradlew assemble'
-                }
+        stage('Compile'){
+            dir("${application[0]}"){
+                sh './gradlew assemble'
             }
+        }
     }
     else if(application[1] == "go") {
-            stage('Compile'){
-                dir("${application[0]}"){
-                    sh 'go build'
-                }
+        stage('Compile'){
+            dir("${application[0]}"){
+                sh 'go build'
             }
-
+        }
     }
 }
+
 def testApplication(application){
     if(application[1] == "java"){
-            stage('Test'){
-                dir("${application[0]}"){
-                    sh './gradlew test'
-                }
+        stage('Test'){
+            dir("${application[0]}"){
+                sh './gradlew test'
             }
+        }
     }
     else if(application[1] == "go") {
-            stage('Test'){
-                dir("${application[0]}"){
-                    sh 'go test'
-                }
+        stage('Test'){
+            dir("${application[0]}"){
+                sh 'go test'
             }
+        }
     }
 }
+
 def deploySharedResources(){
     stage('Deploy Networking Infrastructure') {
         sh """
