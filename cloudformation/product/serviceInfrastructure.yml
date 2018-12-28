@@ -167,7 +167,7 @@ Resources:
 
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource
           ECSAutoScalingGroup --region ${AWS::Region}
-  ECSInstanceProfile:
+  ECSEC2InstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
       Path: /
