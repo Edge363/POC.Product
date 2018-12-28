@@ -1,5 +1,5 @@
 
-def applications = [["product","go"], "stock","java"] 
+def applications = [["product","go"], ["stock","java"]] 
 
 node('dev') {         
     stage('Checkout') {
