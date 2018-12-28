@@ -19,15 +19,15 @@ node('dev') {
                 docker.image("${application[0]}").push("latest")
             }
         }
-        stage('Deploy Data Layer') {
+        stage('Deploy Data Infrastructure') {
             sh """
-                aws cloudformation create-stack --stack-name ${application[0]}data --template-body file://./cloudformation/${application[0]}/dataLayer.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/dataLayerParams.json --capabilities CAPABILITY_IAM
+                aws cloudformation create-stack --stack-name ${application[0]}data --template-body file://./cloudformation/${application[0]}/dataInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/dataInfrastructureParams.json --capabilities CAPABILITY_IAM
                 aws cloudformation wait stack-create-complete --stack-name ${application[0]}data --region us-east-1
             """
         } 
-        stage('Deploy Service Layer') {
+        stage('Deploy Service Infrastructure') {
             sh """
-                aws cloudformation create-stack --stack-name ${application[0]}service --template-body file://./cloudformation/${application[0]}/serviceLayer.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/serviceLayerParams.json --capabilities CAPABILITY_IAM
+                aws cloudformation create-stack --stack-name ${application[0]}service --template-body file://./cloudformation/${application[0]}/serviceInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/serviceInfrastructureParams.json --capabilities CAPABILITY_IAM
                 aws cloudformation wait stack-create-complete --stack-name ${application[0]}service --region us-east-1
             """
         }
@@ -68,9 +68,9 @@ def testApplication(application){
     }
 }
 def deploySharedResources(){
-    stage('Deploy Networking Layer') {
+    stage('Deploy Networking Infrastructure') {
         sh """
-            aws cloudformation create-stack --stack-name sharednetworking --template-body file://./cloudformation/shared/networkingLayer.yml --region us-east-1 --parameters file://./cloudformation/shared/networkingLayerParams.json --capabilities CAPABILITY_IAM
+            aws cloudformation create-stack --stack-name sharednetworking --template-body file://./cloudformation/shared/networkingInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/shared/networkingInfrastructureParams.json --capabilities CAPABILITY_IAM
             aws cloudformation wait stack-create-complete --stack-name sharednetworking --region us-east-1
         """
     } 
