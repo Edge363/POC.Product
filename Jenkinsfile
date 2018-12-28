@@ -34,12 +34,13 @@ node('dev') {
             }
         }
     } catch (Exception e) {
+        deleteSharedResources()
          for (application in applications) {
              sh """
-                aws cloudformation delete-stack --stack-name ${application[0]}data --template-body file://./cloudformation/${application[0]}/dataInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/dataInfrastructureParams.json --capabilities CAPABILITY_IAM
+                aws cloudformation delete-stack --stack-name ${application[0]}data --region us-east-1--capabilities CAPABILITY_IAM
             """
             sh """
-                aws cloudformation delete-stack --stack-name ${application[0]}service --template-body file://./cloudformation/${application[0]}/serviceInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/${application[0]}/serviceInfrastructureParams.json --capabilities CAPABILITY_IAM
+                aws cloudformation delete-stack --stack-name ${application[0]}service --region us-east-1--capabilities CAPABILITY_IAM
             """
          }
     }
@@ -89,6 +90,6 @@ def deploySharedResources(){
 }
 def deleteSharedResources(){
     sh """
-        aws cloudformation delete-stack --stack-name sharednetworking --template-body file://./cloudformation/shared/networkingInfrastructure.yml --region us-east-1 --parameters file://./cloudformation/shared/networkingInfrastructureParams.json --capabilities CAPABILITY_IAM
+        aws cloudformation delete-stack --stack-name sharednetworking --region us-east-1--capabilities CAPABILITY_IAM
     """
 }
