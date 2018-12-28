@@ -5,7 +5,7 @@ node('dev') {
     stage('Checkout') {
         checkout scm
     }
-    try(){
+    try {
         deploySharedResources()
         for (application in applications) {
             compileApplication(application)
