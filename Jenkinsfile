@@ -38,14 +38,14 @@ node('dev') {
 def compileApplication(application){
     if(application[1] == "java"){
             stage('Compile'){
-                dir(${application[0]}){
+                dir("${application[0]}""){
                     sh './gradlew assemble'
                 }
             }
     }
     else if(application[1] == "go") {
             stage('Compile'){
-                dir(${application[0]}){
+                dir("${application[0]}""){
                     sh 'go build'
                 }
             }
