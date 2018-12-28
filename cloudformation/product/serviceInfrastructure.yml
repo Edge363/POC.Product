@@ -133,8 +133,8 @@ Resources:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
       VPCZoneIdentifier: 
-        - !ImportValue publicsubnetoneID
-        - !ImportValue publicsubnettwoID
+        - !ImportValue randonlinkpublicsubnetoneID
+        - !ImportValue randonlinkpublicsubnettwoID
       LaunchConfigurationName: !Ref ContainerInstances
       MinSize: '1'
       MaxSize: !Ref MaxSize
