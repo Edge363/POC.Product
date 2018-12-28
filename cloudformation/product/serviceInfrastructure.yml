@@ -190,8 +190,8 @@ Resources:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
       Subnets:
-        - !ImportValue publicsubnetoneID
-        - !ImportValue publicsubnettwoID
+        - !ImportValue randonlinkpublicsubnetoneID
+        - !ImportValue randonlinkpublicsubnettwoID
       SecurityGroups:
         - !ImportValue randonlinkfrontendSGID
   RandonLinkALBListener:
