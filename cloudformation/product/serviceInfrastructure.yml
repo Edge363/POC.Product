@@ -341,5 +341,5 @@ Outputs:
   ProductTaskDefinition:
     Value: !Ref ProductTaskDefinition
   AutoScalingRoleArn:
-    Value: !Ref AutoscalingRole.Arn
+    Value: !GetAtt AutoscalingRole.Arn
     
