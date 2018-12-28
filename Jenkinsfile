@@ -34,7 +34,7 @@ node('dev') {
     }
 }
 
-static def compileApplication(var application){
+def compileApplication(var application){
     if(application[1] == "java"){
             stage('Compile'){
                 dir(${application[0]}){
@@ -51,7 +51,7 @@ static def compileApplication(var application){
 
     }
 }
-static def testApplication(var application){
+def testApplication(var application){
     if(application[1] == "java"){
             stage('Test'){
                 dir(${application[0]}){
@@ -67,7 +67,7 @@ static def testApplication(var application){
             }
     }
 }
-static def deploySharedResources(){
+def deploySharedResources(){
     stage('Deploy Networking Layer') {
         sh """
             aws cloudformation create-stack --stack-name sharednetworking --template-body file://./cloudformation/shared/networkingLayer.yml --region us-east-1 --parameters file://./cloudformation/shared/networkingLayerParams.json --capabilities CAPABILITY_IAM
